@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *HGPercentEncodedStringFromStringWithEncoding(NSString *string, NSStringEncoding encoding);
+extern NSString *CSPercentEncodedStringFromStringWithEncoding(NSString *string, NSStringEncoding encoding);
 
 /**
  The Default key for values that are being read when the value doesn't exist
  */
-extern NSString * const HGConfigurationManagerDefaultKey;
+extern NSString * const CSConfigurationManagerDefaultKey;
 
 
-@interface HGConfigurationManager : NSObject
+@interface CSConfigurationManager : NSObject
 
 /**
  The configuration string to use, defaults to your ${CONFIGURATION} value
