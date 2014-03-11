@@ -27,7 +27,7 @@ NSString * const CSConfigurationManagerDefaultKey = @"Default";
 #ifdef BUILD_TARGET
 		self.configuration = (NSString *)CFSTR(BUILD_TARGET);
 #else
-		self.configuration = HGConfigurationManagerDefaultKey;
+		self.configuration = CSConfigurationManagerDefaultKey;
 #endif
 	}
 
