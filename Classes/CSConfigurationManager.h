@@ -23,11 +23,15 @@ extern NSString * const CSConfigurationManagerDefaultKey;
  */
 @property (nonatomic, copy) NSString *configuration;
 
+/**
+ Initialize with Plist file
+ */
+- (instancetype)initWithContentsOfPlist:(NSString *)path;
 
 /**
- Default initializer, needs a path to a plist
+ Initialize with JSON file
  */
-- (id)initWithContentsOfURL:(NSURL *)url;
+- (instancetype)initWithContentsOfJSON:(NSString *)path;
 
 
 /**
@@ -43,8 +47,8 @@ extern NSString * const CSConfigurationManagerDefaultKey;
 
 
 /**
- Gets configured Configuration for the path and parameters
+ Gets the value for the key and replaces placeholders with replacements
  */
-- (NSString *)configurationValueForIdentifier:(NSString *)pathIdentifier parameters:(NSDictionary *)pathParameters;
+- (NSString *)valueForKey:(NSString *)key replacements:(NSDictionary *)replacements;
 
 @end

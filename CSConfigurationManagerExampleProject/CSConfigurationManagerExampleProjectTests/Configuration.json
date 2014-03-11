@@ -1,0 +1,13 @@
+{
+	"Default": {
+		"BaseURL": "http://google.com",
+		"APIVersion": "v2.x"
+		"LogLevel": "Error"
+	},
+	"Release": {
+		"APIVersion": "v2.01"
+	},
+	"Debug": {
+		"LogLevel": "Debug"
+	}
+}

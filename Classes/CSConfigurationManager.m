@@ -21,15 +21,40 @@ NSString * const CSConfigurationManagerDefaultKey = @"Default";
 @synthesize configuration = configuration_;
 
 
-- (id)initWithContentsOfURL:(NSURL *)url {
+- (instancetype)init {
 	self = [super init];
 	if (self) {
-		self.dataSource = [[NSDictionary alloc] initWithContentsOfFile:[url path]];
 #ifdef BUILD_TARGET
 		self.configuration = (NSString *)CFSTR(BUILD_TARGET);
 #else
-		self.configuration = CSConfigurationManagerDefaultKey;
+		self.configuration = HGConfigurationManagerDefaultKey;
 #endif
+	}
+
+	return self;
+}
+
+
+/**
+ Initialize with Plist
+ */
+- (instancetype)initWithContentsOfPlist:(NSString *)path {
+	self = [self init];
+	if (self) {
+		self.dataSource = [[NSDictionary alloc] initWithContentsOfFile:path];
+	}
+
+	return self;
+}
+
+
+/**
+ Initialize with JSON
+ */
+- (id)initWithContentsOfJSON:(NSString *)path {
+	self = [self init];
+	if (self) {
+		self.dataSource = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:path] options:0 error:nil];
 	}
 
 	return self;
@@ -57,16 +82,15 @@ NSString * const CSConfigurationManagerDefaultKey = @"Default";
 - (id)objectForKey:(NSString *)key {
 	NSDictionary *confDataSource;
 	id value;
-	// configuration exists, value exists - configuration/key
+	
 	if ((confDataSource = [self.dataSource objectForKey:self.configuration]) && (value = [confDataSource objectForKey:key])) {
+		// configuration exists, value exists - configuration/key
 		return value;
-	}
-	// check default
-	else if ((confDataSource = [self.dataSource objectForKey:CSConfigurationManagerDefaultKey]) && (value = [confDataSource objectForKey:key])) {
+	} else if ((confDataSource = [self.dataSource objectForKey:CSConfigurationManagerDefaultKey]) && (value = [confDataSource objectForKey:key])) {
+		// check default
 		return value;
-	}
-	// no value at all.
-	else {
+	} else {
+		// no value at all.
 		return nil;
 	}
 }
@@ -78,18 +102,17 @@ NSString *CSPercentEncodedStringFromStringWithEncoding(NSString *string, NSStrin
 }
 
 
-- (NSString*)configurationValueForIdentifier:(NSString *)pathIdentifier parameters:(NSDictionary *)pathParameters {
-
-	NSString *path = [self valueForKey:pathIdentifier];
-	for (id key in [pathParameters allKeys]) {
-		NSString *replacement = CSPercentEncodedStringFromStringWithEncoding([NSString stringWithFormat:@"%@", [pathParameters objectForKey:key]], NSASCIIStringEncoding);
+- (NSString *)valueForKey:(NSString *)key replacements:(NSDictionary *)replacements {
+	NSString *value = [self valueForKey:key];
+	for (id replacementKey in [replacements allKeys]) {
+		NSString *replacement = CSPercentEncodedStringFromStringWithEncoding([NSString stringWithFormat:@"%@", [replacements objectForKey:replacementKey]], NSASCIIStringEncoding);
 		if (replacement == nil) {
 			continue;
 		}
-		path = [path stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"{%@}", key] withString:replacement];
+		value = [value stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"{%@}", replacementKey] withString:replacement];
 	}
 	
-	return path;
+	return value;
 }
 
 
