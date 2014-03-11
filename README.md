@@ -1,5 +1,3 @@
-# TODO: I'm yet to be documented.
-
 # Introduction
 
 CSConfigurationManager allows to load configurations from a PLIST or JSON files in iOS, categorized by `CONFIGURATION` constant.
@@ -29,18 +27,27 @@ If you request values from the configuration manager when you built for target `
 
 # Usage
 
+Assuming your build target is "Debug"
 ```
-CSConfigurationManager *manager = [[CSConfigurationManager alloc] initWith]
+NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Configuration" ofType:@"json"];
+
+CSConfigurationManager *configurationManager = [[CSConfigurationManager alloc] initWithContentsOfJSON:path];
+[configurationManager valueForKey:@"APIVersion"]; // @"2.x"
+[configurationManager valueForKey:@"LogLevel"]; // @"Debug"
 ```
 
 
 # Setup
 
+Insert the following to your preprocessor macro build settings:
+```
 STRINGIFY(X)=#X
 BUILD_TARGET=STRINGIFY(${CONFIGURATION})
-
-
 USERNAME=STRINGIFY(${USER})
 CONFIGURATION_${CONFIGURATION}
+```
+
+Include `CSConfigurationManager.h` to your file and start using it.
+
 
 
